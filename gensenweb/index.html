@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <title>専門用語（キーワード）自動抽出サービス「言選Ｗｅｂ」へようこそ</title>
+        <style>
+            .title{ color: #2563eb; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="title">専門用語（キーワード）自動抽出サービス「言選Ｗｅｂ」へようこそ</h1>
+            <br>
+            <p>このページでは文章中から専門用語（キーワード）を切り出すことができます。文章中から厳選された言葉を選んでくれますからその名の通りゲンセンWebなのです！<br>
+                専門用語自動抽出用JavaScriptライブラリの機能を、Web上で提供しています。より専門的な結果を望む場合はソフトウェア版の使用を推奨します
+            </p>
+            <br>
+            <p>
+                <strong>以下に日本語の文章を入力し、「日本語用語抽出」ボタンをクリックしてください。</strong><br>
+                <textarea class="form-control" type="text" name="input" id="input" cols=100 rows=7></textarea>
+                <br>
+                <button type="button" class="btn btn-primary  btn-lg" onclick="termextract_ja()">日本語用語抽出</button>&nbsp;
+                <button type="button" class="btn btn-primary  btn-lg" onclick="termextract_en()">英語用語抽出</button>&nbsp;
+                <button type="button" class="btn btn-secondary btn-lg" onclick="Clear()">クリア</button>
+            </p>
+            <br><br>
+            <p>
+                <strong>処理結果はここに出力されます</strong><br>
+                <textarea class="form-control" type="text" name="result" id="result" cols=100 rows=15></textarea>
+            </p>
+            <hr>
+            <p>
+                仕様については予告なしに変更する可能性があります。<br>
+                このソフトウェアは、 日本語の形態素解析にApache 2.0ライセンスで配布されている<a href="https://github.com/takuyaa/kuromoji.js/">kuromoji.js</a>が含まれています。<br>
+                英文POS Taggerには<a href="naturalのBrillTagger">Natural</a>のBrillTaggerを使用しています 
+            </p>
+            <a href="../">トップページに戻る</a>
+        </div>
+            
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="./js/kuromoji.js"></script>
+        <script src="./js/gensenwebKuromojijs.js"></script>
+        <script src="./js/gensenwebBrillstaggerjs.js"></script>
+        <script type="text/javascript">
+        <!--
+            let japaneseTokenizerPromise;
+
+            async function termextract_ja() {
+                $('#result').val("");
+                const input = $("#input").val();
+                if (!input.trim()) {
+                    return;
+                }
+
+                try {
+                    if (!japaneseTokenizerPromise) {
+                        japaneseTokenizerPromise = new Promise((resolve, reject) => {
+                            kuromoji.builder({ dicPath: "./js/node_modules/kuromoji/dict" })
+                                .build((error, tokenizer) => {
+                                    if (error) {
+                                        reject(error);
+                                    } else if (!tokenizer) {
+                                        reject(new Error("形態素解析器を初期化できませんでした。"));
+                                    } else {
+                                        resolve(tokenizer);
+                                    }
+                                });
+                        }).catch(error => {
+                            japaneseTokenizerPromise = null;
+                            throw error;
+                        });
+                    }
+
+                    const tokenizer = await japaneseTokenizerPromise;
+                    const tokenizedWords = tokenizer.tokenize(input);
+                    const termextract = window.gensenwebKuromojijs;
+                    const candidates = termextract.cmp_noun_list(tokenizedWords);
+                    const frequency = termextract.list2key_value(candidates);
+                    const lrScores = termextract.score_lr(frequency, termextract.IGNORE_WORDS, 1, 1);
+                    const importance = termextract.term_importance(frequency, lrScores);
+                    const sortedTerms = termextract.sort_by_importance(importance);
+                    const response = sortedTerms.map(data =>
+                        `${termextract.modify_agglutinative_lang(data.cmp_noun)}\t${data.importance}`
+                    ).join("\n");
+                    $('#result').val(response);
+                } catch (error) {
+                    $('#result').val(`日本語用語抽出に失敗しました: ${error.message}`);
+                }
+            }
+            async function termextract_en() {
+                $('#result').text("");
+                const input = $("#input").val();
+                if (!input.trim()) {
+                    return;
+                }
+
+                try {
+                    const { BrillPOSTagger, Lexicon, RuleSet } = await import(
+                        "https://esm.sh/natural@6.12.0/lib/natural/brill_pos_tagger"
+                    );
+                    const lexicon = new Lexicon("EN", "N", "NNP");
+                    const ruleSet = new RuleSet("EN");
+                    const tagger = new BrillPOSTagger(lexicon, ruleSet);
+                    const words = input.replace(/([.,?!])/g, " $1").split(/\s+/).filter(Boolean);
+                    const taggedWords = tagger.tag(words);
+                    const termextract = window.gensenwebBrillstaggerjs;
+                    const candidates = termextract.cmp_noun_list(taggedWords);
+                    const frequency = termextract.list2key_value(candidates);
+                    const lrScores = termextract.score_lr(frequency, termextract.IGNORE_WORDS, 1, 1);
+                    const importance = termextract.term_importance(frequency, lrScores);
+                    const sortedTerms = termextract.sort_by_importance(importance);
+                    const response = sortedTerms.map(data =>
+                        `${termextract.modify_agglutinative_lang(data.cmp_noun)}\t${data.importance}`
+                    ).join("\n");
+                    $('#result').val(response);
+                } catch (error) {
+                    $('#result').val(`英語用語抽出に失敗しました: ${error.message}`);
+                }
+            }
+            function Clear() {
+                $('#result').text("");
+                $('#input').val("");
+            }
+        -->
+        </script>
+    </body>
+</html>

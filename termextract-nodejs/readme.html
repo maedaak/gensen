@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <title>専門用語抽出Node.jsライブラリ termextact-nodejs</title>
+</head>
+<body>
+    <h1>専門用語抽出Node.jsライブラリ termextact-nodejs</h1>
+    <br>
+    <div id="0"><h3>Contents:</h3>
+        <a href="#1">１．概要</a> / <a href="#2">２．インストール</a> / <a href="#3">３．サンプルスクリプトを使用する</a> / <br>
+        <a href="#4"> ４．仕様</a> / <a href="#5">５．Copyright</a> / <a href="#6">６．免責</a>
+        <br>
+        <div class="leftlink"><a href="http://gensen.dl.itc.u-tokyo.ac.jp/">専門用語自動抽出システムのトップページへ</a></div>
+        <hr />
+        <br>
+    </div>
+    <div id="1">
+        <h2>１．概要</h2>
+        テキストファイル(UTF-8, BOM無し)から、専門用語とその文中の重要度を出力するNode.js用のJavaScriptです。<br>
+        Python版TermExtractをNode.js用に、日本語と英語の専門用語抽出の基本機能のみ移植しました。<br>
+        連携する日本語形態素解析システムは、<a href="https://github.com/takuyaa/kuromoji.js/" target="_blank" rel="noopener noreferrer">kuromoji.js</a> を使っています。<br>
+        英語のPOSTaggerはNaturalの<a href="https://naturalnode.github.io/natural/brill_pos_tagger.html"  target="_blank" rel="noopener noreferrer">POSTagger</a>です。
+    </div>
+    <hr>
+    <div id="2">
+        <h2>２．インストール</h2>
+        事前にNode.jsのインストールが必要です。コマンドプロンプトから、teremextract-nodejsをインストールしたディレクトリ上で、次のコマンドを実行してください。
+        <br>
+        <code>npm install .</code>
+    </div>
+    <div id="3">
+        <h2>３．サンプルスクリプトを使用する</h2>
+        <h3>実行する</h3>
+        termextract-nodejsに付属するtermex-ja.jsを使うことで、日本語テキストから専門用語を抽出できます。<br>
+        termex-en.jsは英語テキスト用です。使い方は英文テキストファイルを対象とする以外termex-ja.js と同じです。
+        <dt>Usage<br>
+            &nbsp;&nbsp;<code>node termex-ja.js inputfile outputfile</code><br>
+            <ul>
+                <li>
+                    <dt>inputfile</dt>
+                    <dd>処理対象の日本語テキスト(UTF-8)ファイル名</dd>
+                </li>
+                <br>
+                <li>
+                    <dt>outputfile</dt>
+                    <dd>処理結果の出力ファイル名</dd>
+                    <dd>省略時はoutputfile.txtに出力</dd>
+                </li>
+            </ul>
+        </dt>
+        <h3>スクリプトを改変・流用する</h3>
+        このtermex-ja.js及びtermex-en.jsは自由に改変・流用してお使いください。<br>
+        内部では次の処理を順に実行してます。詳細は後述のライブラリ仕様をご覧ください。処理ごとに中間データを出力しますので、それを取り出し使用することも可能です。<br>
+        <ul>
+            <li><code>cmp_noun_list = termextract.cmp_noun_list(tokenized_word);</code></li>
+            <li><code>frequency = termextract.list2key_value(cmp_noun_list);</code></li>
+            <li><code>score_lr = termextract.score_lr(frequency, termextract.IGNORE_WORDS, 1, 1);</code></li>
+            <li><code>term_importance = termextract.term_importance(frequency, score_lr);</code></li>
+            <li><code>score_lt_list = termextract.sort_by_importance(term_importance);</code></li>
+        </ul>
+    </div>
+    <div id="4">
+        <h2>４．ライブラリ仕様</h2>
+        入出力に使用できる文字コードはUTF-8のみです。呼び出せる機能は以下のとおりになります。<br>
+        サンプルスクリプトと合わせて説明をお読みください。
+        <dl>
+            <hr class="dashed">
+            <dt>cmp_noun_list(tokenized_word)</dt>
+            <dd>
+                kuromoji.jsの日本語解析処理結果をもとに出現順の用語（単名詞スペース区切り）の配列を返す。
+                <dl>
+                    <dt>tokenized_word 【必須】</dt>
+                    <dd>
+                        kuromoji.jsによる日本語解析結果オブジェクト
+                    </dd>
+                </dl>
+            </dd>
+            <hr class="dashed">
+            <dt>sort_by_importance(term_importance)</dt>
+            <dd>
+                重要度順の用語リストを出力する。<br>
+                <dl>
+                    <dt>各配列要素のキー</dt>
+                    <dd>cmp_nou: 用語（複合語）</dd>
+                    <dd>importance: 用語の処理テキスト中の重要度</dd>
+                </dl>
+                <dl>
+                    <dt>cmp_noun_list 【必須】</dt>
+                    <dd>
+                    用語をキーに重要度を値としたKey-Value形式のオブジェクト 
+                    </dd>
+                </dl>
+            </dd>
+            <hr class="dashed">
+            <dt>IGNORE_WORDS</dt>
+            <dd>
+                ライブラリが標準で用意する重要度計算の例外とする語のセットを得る。<br>
+                後述のscore_lr()で使用する。
+            </dd>
+            <hr class="dashed">
+            <dt>score_lr(frequency, ignore_words, lr_mode, average_rate)</dt>
+            <dd>
+                専門用語とそれを構成する単名詞の情報から重要度を計算する
+                <dl>
+                    <dt>frequency 【必須】
+                    <dd>
+                        複合語（単名詞の空白区切り）をキーに出現回数を値にしたディクショナリ
+                    </dd>
+                    <br>
+                    <dt>ignore_words 【推奨】</dt>
+                    <dd>
+                        <ul>
+                            <li>重要度計算の例外とする語のセット。</li>
+                            <li>ライブラリ標準のIGNORE_WORDSの指定を推奨する。</li>
+                        </ul>
+                    </dd>
+                    <br>
+                    <dt>lr_mode</dt>
+                    <dd>
+                        <ul>
+                            <li>1のときはLRの計算において「延べ数」をとる。</li>
+                            <li>2のときはLRの計算において「異なり数」をとる。</li>
+                            <li>デフォルトは「延べ数」をとる。</li>
+                        </ul>
+                    </dd>
+                    <br>
+                    <dt>average_rate</dt>
+                    <dd>
+                        <ul>
+                            <li>重要度計算においてLRとFrequencyの比重を調整する。</li>
+                            <li>数値が小さいほうがFRの比重が大きい。</li>
+                            <li>デフォルトは1。</li>
+                        </ul>
+                    </dd>
+                    <br>
+                </dl>
+            </dd>
+            <hr class="dashed">
+            <dt>term_importance(obj_1, obj_2, ..., obj_n)</dt>
+            <dd>
+                複数の重要度情報を組み合わせ（乗算し）、複合語（単名詞の空白区切り）をキーに重要度を値にしたディクショナリを返す。
+                <dl>
+                    <dt>obj_1～obj_n 【必須】</dt>
+                    <dd>
+                        複合語（単名詞の空白区切り）をキーに重要度を値にしたKey-Valueオブジェクト。
+                    </dd>
+                </dl>
+            </dd>
+            <dt>modify_agglutinative_lang(data)</dt>
+            <dd>
+                半角スペースで区切られた単名詞を膠着言語（日本語等）向けに成形する
+                <dl>
+                    <dt>data 【必須】</dt>
+                    <dd>
+                        半角スペースで区切られた単名詞
+                    </dd>
+                </dl>
+            </dd>
+        </dl>
+    </div>
+    <hr>
+    <div id="5">
+        <h2>５．Copyright</h2>
+        「専門用語自動抽出システム」は 東京大学情報基盤センター図書館電子化部門中川裕志教授および 横浜国立大学環境情報研究院森辰則助教授が共同で開発したものです。<br>
+        termextract-nodejsは主として中川教授、 東京大学前田朗、 東京大学小島浩之講師の３者で検討を重ね、この「専門用語自動抽出システム」を改良したTermExtractをベースに、日本語・英語の専門用語自動抽出の基本機能をNode.js(JavaScript)に移植したものである。
+    </div>
+    <div id="6">
+        <h2>６．免責</h2>
+            本プログラムの使用において生じたいかなる結果に関しても当方では一切責任を負わない。
+    </div>
+</body>
+</html>

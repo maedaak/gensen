@@ -1,0 +1,420 @@
+<htm>
+<head>
+<title>専門用語（キーワード）自動抽出Pythonモジュールtermextract【β版】</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="css/pytermextract.css" />
+</head>
+<doby>
+<h1>専門用語（キーワード）自動抽出Pythonモジュールtermextract【β版】</h1>
+<p />
+
+<div id="0"><h3>Contents:</h3>
+<a href="#1">１．概要</a> / <a href="#2">２．インストール</a> / <a href="#3">３．コンセプト</a> / <br />
+<a href="#4">４．利用例</a> / <a href="#5">５．利用法</a> / <br />
+<a href="#6">６．オリジナルTermExtractとの違い</a> /  <a href="#7">７．α版との違い</a> / <br />
+<a href="#8">８．Copyright</a> / <a href="#9">９．免責</a>
+<p />
+<div class="leftlink"><a href="http://gensen.dl.itc.u-tokyo.ac.jp/">専門用語自動抽出システムのトップページへ</a></div>
+<hr />
+<p />
+</div>
+
+<div id="1">
+<h2>１．概要</h2>
+termextractはテキストデータから専門用語を取り出すためのPython3モジュールである。
+<p />
+<hr />
+<p />
+</div>
+
+<div id="2">
+<h2>２．インストール</h2>
+pytermextractを解凍し以下のコマンドを実行すること。<br />
+　<code>python setup.py install</code>
+<p />
+<hr />
+<p />
+</div>
+
+<div id="3">
+<h2>３．コンセプト</h2>
+専門用語の抽出とその重要度の計算、膠着言語（和文・中文）の整形出力処理を、複数のモジュール・関数の組み合わせで実現する。以下の図を参照のこと。<p />
+　<img src="./concept.png"  width="80%" height="80%" border="1">
+<p />
+<hr />
+<p />
+</div>
+
+<div id="4">
+<h2>４．利用例</h2>
+<h3>（１）POS Tagger・形態素解析器の出力結果を使った専門用語抽出</h3>
+<ul>
+    <li><a href="./mecab.html">和布蕪（日本語形態素解析器）</a></li>
+    <li><a href="./english_postagger.html">英文POS Tagger(Pythonのnltkモジュールのword_tokenize）</a></li>
+    <li><a href="./nlpir.html">nlpir(ICTCLASS 中文形態素解析器）</a></li>
+</ul>
+<p />
+<h3>（２）文のストップワード分割による専門用語抽出</h3>
+<ul>
+    <li><a href="./english_plaintext.html">英文を指定のストップワードで分割</a></li>
+    <li><a href="./japanese_plaintext.html">和文を「ひらがな」及び「記号」で分割</a></li>
+    <li><a href="./chinese_plaintext.html">中文を指定のストップワードで分割</a></li>
+</ul>
+<p />
+<h3>（３）専門用語の重要度計算の応用例</h3>
+<ul>
+    <li><a href="./TF-IDF+(mecab).html">TF・IDF（和布蕪の和文解析結果を使用）</a></li>
+    <li><a href="./store+LR+(mecab).html">LR(単名詞の左右の連接情報)を蓄積利用（和布蕪の和文解析結果を使用）</a></li>
+</ul>
+<p />
+<hr />
+<p />
+</div>
+
+<div id="5">
+<h2>５．利用法</h2>
+入出力に使用できる文字コードはUTF-8のみ。
+<dl>
+    <dt>termextract.core - termextractの基本関数を提供</dt>
+        <dd>
+        インターフェイスは以下のとおり。
+            <dl>
+            <dt>modify_agglutinative_lang(data)</dt>
+            <dd>
+                半角スペースで区切られた単名詞を膠着言語（日本語等）向けに成形する
+                <dl>
+                <dt>data 【必須】</dt>
+                <dd>
+                    複合語（単名詞の空白区切り）をキーに重要度を値にしたディクショナリ
+                </dd>
+                </dl>
+            </dd>
+            <br />
+            <dt>score_lr(frequency, lr_mode, average_rate,ignore_words, dbm))</dt>
+            <dd>
+                専門用語とそれを構成する単名詞の情報から重要度を計算する
+                <dl>
+                <dt>frequency 【必須】
+                <dd>
+                    複合語（単名詞の空白区切り）をキーに出現回数を値にしたディクショナリ
+                </dd>
+                <br />
+                <dt>lr_mode</dt>
+                <dd>
+                <ul>
+                    <li>1のときはLRの計算において「延べ数」をとる。</li>
+                    <li>2のときはLRの計算において「異なり数」をとる。</li>
+                    <li>デフォルトは「延べ数」をとる。</li>
+                </ul>
+                </dd>
+                <br />
+                <dt>average_rate</dt>
+                <dd>
+                <ul>
+                    <li>重要度計算においてLRとFrequencyの比重を調整する。</li>
+                    <li>数値が小さいほうがFRの比重が大きい。</li>
+                    <li>デフォルトは1。</li>
+                </ul>
+                </dd>
+                <br />
+                <dt>ignore_words  【推奨】</dt>
+                <dd>
+                <dd>
+                <ul>
+                    <li>重要度計算の例外とする語のセット。</li>
+                    <li>各言語抽出モジュールに設定しているIGNORE_WORDSの指定を推奨する。</li>
+                </ul>
+                </dd>
+                <br />
+                <dt>dbm</dt>
+                <dd>
+                <ul>
+                    <li>LR情報を蓄積するdbmファイルを指定する。dbmファイルは、あらかじめ読み込み可能にしオープンしておく。</li>
+                    <li>指定のない場合は、dbmの蓄積情報をLRの計算に使わない。</li>
+                    <li>store_lr()も参照のこと。</li>
+                </ul>
+                </dd>
+                </dl>
+                <br />
+            <dt>frequency2tf(frequency)</dt>
+            <dd>
+                Frequencyの情報から複合語（単名詞の空白区切り）をキーにTF(Term Frequency)を値にしたディクショナリを生成する。
+                <dl>
+                <dt>frequency  【必須】</dt>
+                <dd>
+                    複合語（単名詞の空白区切り）をキーに出現回数を値にしたディクショナリ
+                </dd>
+                </dl>
+                <br />
+            <dt>store_df(frequency, dbm)</dt>
+            <dd>
+                Frequencyの情報から複合語（単名詞の空白区切り）をキーにDF(Document Frequency)の情報をdbmに蓄積する。<br />
+                一回の関数呼び出しを一回の文書読み込みとみなす。
+                <dl>
+                <dt>frequency  【必須】</dt>
+                <dd>
+                    複合語（単名詞の空白区切り）をキーに出現回数を値にしたディクショナリ
+                </dd>
+                <br />
+                <dt>dbm 【必須】</dt>
+                    DF情報を蓄積するdbmファイルを指定する。dbmファイルは、あらかじめ書き込み可能にしオープンしておく。<br />
+                    <pre>
+                    例
+                       import dbm
+                       db = dbm.open("terextract", "c")
+                       termextract.core.store_df(frequency, dbm=db)
+                    </pre>
+                </dd>
+                <br />
+            <dt>get_idf(words, dbm)</dt>
+            <dd>
+                複合語（単名詞の空白区切り）のIDF(Inverted Document Frequency)を取り出す。戻り値は複合語（単名詞の空白区切り）をキーに、IDF情報を値にしたディクショナリ
+                <dl>
+                <dt>words 【必須】</dt>
+                <dd>
+                    複合語（単名詞の空白区切り）をキーにしたディクショナリ、もしくはセット。ディクショナリの値は無視される。
+                </dd>
+                <dt>dbm 【必須】</dt>
+                <dd>
+                    DF情報を蓄積するdbmファイルを指定する。dbmファイルは、あらかじめ読み込み込み可能にしオープンしておく。
+                </dd>
+                </dl>
+                <br />
+            <dt>store_lr(frequency, dbm)</dt>
+            <dd>
+                 Frequencyの情報から複合語（単名詞の空白区切り）を元にLR(単名詞の左右の連接情報）をdbmに蓄積する。
+                <dl>
+                <dt>frequency 【必須】</dt>
+                <dd>
+                    複合語（単名詞の空白区切り）をキーに出現回数を値にしたディクショナリ
+                </dd>
+                <br />
+                <dt>dbm 【必須】</dt>
+                <dd>
+                    DF情報を蓄積するdbmファイルを指定する。dbmファイルは、あらかじめ書き込み可能にしオープンしておく。
+                </dd>
+                </dl>
+                <br />
+            <dt>term_importance(dict_1, dict_2, ..., dict_n)</dt>
+            <dd>
+                複数の重要度情報を組み合わせ（乗算し）、複合語（単名詞の空白区切り）をキーに重要度を値にしたディクショナリを返す。
+                <dl>
+                <dt>dict_1～dict_n 【必須】</dt>
+                <dd>
+                    複合語（単名詞の空白区切り）をキーに重要度を値にしたディクショナリ。
+                </dd>
+            </dd>
+            <br />
+            </dl>
+     </dl>
+     <dl>
+     <dt>termextract.mecab - 「和布蕪」ベースの専門用語抽出</dt>
+     <dd>
+        和文の形態素解析ソフトである和布蕪の形態素解析結果を受け取り、複合語（空白区切りの単名詞）のリストか、ディクショナリ（複合語をキー、複合語の出現回数を値）を返す。<br />
+        インターフェイスは以下のとおり。
+         <dl>
+             <dt>cmp_noun_list(data)</dt>
+             <dd>
+                複合語（単名詞の空白区切り・出現順）をリストで返す。
+             </dd>
+             <br />
+             <dt>cmp_noun_dict(data)</dt>
+             <dd>
+                複合語（単名詞の空白区切り）をキーに、その出現回数を値にしたディクショナリを返す。
+　　　　　   </dd>
+　　　　　   <br />
+             <dt>IGNORE_WORDS</dt>
+             <dd>
+                 重要度計算外にする推奨の単名詞のセットを返す
+             </dd>
+         </dl>
+         </dd>
+    </dl>
+    <br />
+     <dt>termextract.english_posagger - nltk.pos_tabベースの専門用語抽出</dt>
+     <dd>
+     <ul>
+        <li>英文POS Taggerであるnltkのpos_tagの結果を受け取り、複合語（空白区切りの単名詞）のリストか、ディクショナリ（複合語をキー、複合語の出現回数を値）を返す。</li>
+        <li>インターフェイスはtermextract.mecabと同じ。</li>
+     </ul>
+     </dd>
+     <br />
+     <dt>termextract.nlpir - NLPIRベースの専門用語抽出</dt>
+     <dd>
+     <ul>
+        <li>中文の形態素解析ソフトであるnlpir(ICTCLAS)の結果を受け取り、複合語（空白区切りの単名詞）のリストか、ディクショナリ（複合語をキー、複合語の出現回数を値）を返す。</li>
+        <li>インターフェイスtermextract.mecabと同じ。</li>
+     </ul>
+     </dd>
+     <br />
+     <dt>termextract.english_plaintext - 英文ストップワード方式の専門用語抽出</dt>
+     <dd>
+     <ul>
+        <li>英文のプレインテキストを受けとり、複合語（空白区切りの単名詞）のリストか、ディクショナリ（複合語をキー、複合語の出現回数を値）を返す。</li>
+        <li>インターフェイスはtermextract.mecabと同じ。</li>
+        <li>複合語の切り出しはモジュール内指定のストップワードによる文の分割。</li>
+     </ul>
+     </dd>
+     <br />
+     <dt>termextract.japanese_plaintext - 和文ストップワード方式の専門用語抽出</dt>
+     <dd>
+     <ul>
+        <li>和文のプレインテキストを受けとり、複合語（空白区切りの単名詞）のリストか、ディクショナリ（複合語をキー、複合語の出現回数を値）を返す。</li>
+        <li>インターフェイスはtermextract.mecabと同じ</li>
+        <li>複合語の切り出しは「ひらがな」「記号」による文の分割。</li>
+     </ul>
+     </dd>
+     <br />
+     <dt>termextract.chinese_plaintex - 中文ストップワード方式の専門用語抽出</dt>
+     <dd>
+     <ul>
+        <li>中文のプレインテキストを受けとり、複合語（空白区切りの単名詞）のリストか、ディクショナリ（複合語をキー、複合語の出現回数を値）を返す。</li>
+        <li>インターフェイスはtermextract.mecabと同じ。</li>
+        <li>複合語の切り出しはモジュール内指定のストップワードによる文の分割。</li>
+     </ul>
+     </dd>
+</dl>
+<hr />
+<p />
+</div>
+
+<div id="6">
+<h2>６．オリジナルTermExtractとの違い</h2>
+<h3>（１）言語</h3>
+オリジナルのTermExtractはPerl ver 5のモジュールとして提供されている。<br />
+ このpytermextractはPython3のパッケージである。
+<p />
+<h3>（２）文字コード</h3>
+Python3の標準文字コードに合わせ、入出力をUTF-8に限定
+<p />
+<h3>（３）オブジェクト指向から関数の提供へ</h3>
+応用可能性を広げるため、関数を組み合わせて利用できるようにした。
+<p />
+<h3>（４）Pyhonの形態素解析・POS Taggerとの連携</h3>
+　　　１）nltkの英文POS Taggerとの連携<br />
+　　　２）ICTCLASSのPythonパッケージnipirとの連携<br />
+<p />
+<h3>（５）和文ストップワード方式</h3>
+「カタカナ・漢字抽出方式」ではなく、「ひらがな・記号」によるストップワード方式にした。これはUTF-8化により切り出すべき対象漢字の増加に対応したものである。
+<p />
+<h3>（６）機能の実装</h3>
+オリジナル版にあるパープレキシティによるLR計算は未実装である。<br />
+機能及びインターフェイスは、予告なく変更される可能性がある。
+<p />
+<h3>（７）パラメータの調整</h3>
+重要度計算対象外にする語の変更など、パラメータの調整を行った
+<p />
+<hr />
+<p />
+</div>
+
+<div id="7">
+<h2> ７．α版との違い</h2>
+<h3>（１）モジュール名及び関数名の変更</h3>
+Python推奨のスタイルに合わせ名称を変更した。
+<p />
+<h3>（２）重要度計算処理手順の変更</h3>
+α版ではFLR(Frequency × LR)による重要度を関数calc_impにパラメータを与えることで算出した。<br />
+β版では各重要度計算方式による用語と重要度のディクショナリを組み合わせることにより、最終的な重要度を出力する。
+<p />
+<h3>（３）TF・IDF・LRによる重要度計算の追加</h3>
+TF・IDF・LRの重要度をFrequency（用語とその頻度のディクショナリ）からそれぞれ算出できるようにした。<br />
+IDFの算出のためDF情報をdmbに蓄積し、その蓄積データから用語のセット、もしくはディクショナリを渡すことで、指定の用語のIDFを取り出せるようにした。
+<p />
+<h3>（４）LRの情報蓄積とその取り出しを追加した</h3>
+LR情報をdmbに蓄積し、その蓄積データから用語のセット、もしくはディクショナリを渡すことで、指定の用語のLRを取り出せるようにした。
+<p />
+<h3>（５）ストップワード方式による用語抽出の追加</h3>
+英文・和文・中文それぞれのストップワード方式による用語抽出モジュールを追加した。
+<p />
+<h3>（６）IGNORE_WORDSの変数名大文字化とセット化</h3>
+α版のignore_wordsの変数名を定数であることから大文字化した。<br />
+また処理速度の向上のためリストからセットに変更した。
+<p />
+<h3>（８）バグの修正</h3>
+α版にあるバグのいくつかを修正した
+<hr />
+<p />
+</div>
+
+<div id="8">
+<h2>８．Copyright</h2>
+　「専門用語自動抽出システム」は 東京大学情報基盤センター図書館電子化部門中川裕志教授および 横浜国立大学環境情報研究院森辰則助教授が共同で開発したものです。<br />
+　pytermextractは主として中川教授、 東京大学前田朗、 東京大学小島浩之講師の３者で検討を重ね、この「専門用語自動抽出システム」を改良したものである。<br />
+<p />
+　Python版termextractの配布パッケージに含む以下のサンプルデータはWikipedia(CC-BY-Sa)記事を元にしている。
+<p />
+<table border=!>
+<tr>
+    <th>ファイル名</th>
+    <th>wikipedia記事タイトル</th>
+    <th>wikipedia記事リンク</th>
+    <th>licencs</th>
+    <th>Disclaimers</th>
+    <th>注記</th>
+</tr>
+<tr>
+    <td>japanese_sample.txt</td>
+    <td>人工知能</td>
+    <td><a href="https://ja.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%9F%A5%E8%83%BD">link</a></td>
+    <td><a href="https://ja.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">link</a></td>
+    <td><a href="https://wikimediafoundation.org/wiki/Terms_of_Use/ja#14._.E5.85.8D.E8.B2.AC.E4.BA.8B.E9.A0.85">link</a></td>
+    <td></td>
+ </tr>
+ 
+<tr>
+    <td>mecab_out_sample.txt</td>
+　　<td>人工知能</td>
+　　<td><a href="https://ja.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E7%9F%A5%E8%83%BD">link</a></td>
+    <td><a href="https://ja.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">link</a></td>
+    <td><a href="https://wikimediafoundation.org/wiki/Terms_of_Use/ja#14._.E5.85.8D.E8.B2.AC.E4.BA.8B.E9.A0.85">link</a></td>
+    <td>和布蕪で処理済</td>
+</tr>
+
+<tr>
+    <td>mecab_out_sample2.txt</td>
+　　<td>自然言語処理</td>
+　　<td><a href="https://ja.wikipedia.org/wiki/%E8%87%AA%E7%84%B6%E8%A8%80%E8%AA%9E%E5%87%A6%E7%90%86">link</a></td>
+　　<td><a href="https://ja.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">link</a></td>
+　　<td><a href="https://wikimediafoundation.org/wiki/Terms_of_Use/ja#14._.E5.85.8D.E8.B2.AC.E4.BA.8B.E9.A0.85">link</a></td>
+    <td>和布蕪で処理済</td>
+</tr>
+
+<tr>
+    <td>mecab_out_sample3.txt</td>
+　　<td>専門用語</td>
+　　<td><a href="https://ja.wikipedia.org/wiki/%E5%B0%82%E9%96%80%E7%94%A8%E8%AA%9E">link</a></td>
+　　<td><a href="https://ja.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">link</a></td>
+　　<td><a href="https://wikimediafoundation.org/wiki/Terms_of_Use/ja#14._.E5.85.8D.E8.B2.AC.E4.BA.8B.E9.A0.85">link</a></td>
+    <td>和布蕪で処理済</td>
+</tr>
+<tr>
+    <td>eng_sample.txt</td>
+　　<td>A.I. Artificial Intelligence</td>
+　　<td><a href="https://en.wikipedia.org/wiki/A.I._Artificial_Intelligence">link</a></td>
+　　<td><a href="https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">link</a></td>
+　　<td><a href="https://wikimediafoundation.org/wiki/Terms_of_Use#14._Disclaimers">link</a></td>
+　　<td></td>
+</tr>
+<tr>
+    <td>china_sample.txt</td>
+　　<td>人工智能</td>
+　　<td><a href="https://zh.wikipedia.org/wiki/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">link</a></td>
+　　<td><a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC">link</a></td>
+　　<td><a href="https://wikimediafoundation.org/wiki/Terms_of_Use#14._Disclaimers">link</a></td>
+　　<td></td>
+</tr>
+</table>
+<hr />
+<p />
+</div>
+
+<div id="9">
+<h2>９．免責</h2>
+    本プログラムの使用において生じたいかなる結果に関しても当方では
+  一切責任を負わない。
+</p />
+</div>
+<div class="leftlink"><a href="#0">ページトップへ</a></div>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>（工事中）専門用語（キーワード）自動抽出システム”のページ</title>
+    <style>
+        .title { color: #006699;  text-align: center;}
+    </style>
+</head>
+
+<body>
+    <!-- <center> -->
+        <h1 class="title">（工事中）専門用語（キーワード）自動抽出システム”のページへようこそ</h1>
+    <!-- </center> -->
+    <br>最終更新日　2026.11.7<br>
+    <hr color="#006699">
+    <p>
+        <strong>とりあえず使ってみる方はこちらから！</strong> <a href="./gensenweb"><font size="5"><strong>「言選Web」</strong></font></a>
+    </p>
+    <p>
+    <strong>メインメニュー</strong>
+    <br>
+    <strong>1.<A href="#sys">専門用語（キーワード）自動抽出システムとは？</A>
+        2.<a href="#base">基本システム</a>
+        3.<a href="#appli">応用システム</a>
+        4.<a href="#paper">関連文献</a>
+    </strong>
+    </p>
+    <br>
+    <br>
+    <table cellSpacing="2" cellPadding="4" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td bgColor="#006699">
+                    <h2>
+                        <font color=white>新着情報</font><strong><font color="red">New!</font></strong>
+                    </h2>
+                    <a href="./news_archiv.html"><font color="yellow">過去のニュースはこちら</font></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <ul>
+    <li>2022.12.14 専門用語抽出Node.jsライブラリ <a href="./termextract-nodejs/">termextract-nodejs</a> のβバージョン(0.01b)をリリースしました。
+</ul>
+    <br>
+    <br>
+    <table cellSpacing="2" cellPadding="4" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td bgColor="#006699">
+                    <h2>
+                        <font color="white"><a name="sys">1.専門用語（キーワード）自動抽出システムとは？</a></font>
+                    </h2>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <strong>当サイトでは、専門用語（キーワード）自動抽出システムの基本システムおよび応用システムを提供しています。</strong>
+    <br>
+    専門用語（キーワード）自動抽出システムとは、単なる文章の単語分割ではありません。一般に文章中では複数の単語の組み合わせで複雑な概念を表す場合が多く、文章の内容が専門的な事項に特化すればその傾向はさらに顕著なものとなるでしょう。したがって文章中からキーワードを抽出する場合、単語分割機能だけでは意味を成しません。そこで、このシステムでは、（１）形態素解析プログラムによる単語分割、（２）複合語の作成、（３）文章中における重要度の計算、という３つのステップを踏むことで、複合語により複雑な概念を表すことが多い専門用語をキーワードとして文章中から抽出することに成功しました。
+    </p>
+
+    <P>
+        <center>
+            <table>
+                <tbody>
+                    <tr>
+                        <td><strong>・自作の文章からキーワードを抽出したい！</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>・メタデータ作成のためにウェッブサイトからキーワードを抽出したい！</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>・言語学的な研究に利用したい！</strong></td>
+                    </tr>
+                </TBODY>
+            </table>
+        </center>
+        <P>など様々な利用方法が考えられると思いますので、ご自由にお使いだください。</p>
+    </p>
+    <br>
+    <table cellSpacing="2" cellPadding="4" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td bgColor="#006699">
+                    <h2>
+                        <font color="white"><A name="base">2.基本システム</a></font>
+                    </h2>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <P>基本システムは次の方法により提供しています。なお言語は日本語と英語に対応しています</P>
+    <br>
+    <h3>（１）ソフトウェアを導入したい！</h3>
+    <br>
+    <ol>
+        <li>自分のプログラムに専門用語自動抽出機能を付加したい方
+            → 専門用語自動抽出モジュールTermExtractのPerl用とPython用、Node.js(JavaScript)用のいずれかをご利用ください。それぞれ単体で動くサンプルプログラム付が例して付属しています。
+            <ul>
+                <li><a href="./pytermextract/">
+                        <font size="5"><strong>Python3モジュールtermextract</font></strong>
+                    </a>
+                </li>
+                <li><a href="./termextract-nodejs/">
+                        <font size="5"><strong>Node.jsライブラリtermextract-nodejs</font></strong>
+                    </a>
+                </li>
+                <li><a href="./trmextract/">
+                        <font size="5"><strong>PerlモジュールTermExtract</font></strong>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ol>
+    <br>
+    <h3>（２）インターネット版　「言選Web」</h3>
+    <p>面倒なインストール無しで、しかも簡単な操作で専門用語自動抽出サービスを利用できます。より専門的な結果を望む場合はソフトウェア版の使用を推奨します。
+    </p>
+    <li><a href="./gensenweb"><strong>
+        <font size=5>「言選Web」</font></strong></a>
+        <br>
+    </li>
+    <br>
+    <table cellSpacing=2 cellPadding=4 width="100%" border=0>
+        <tbody>
+            <tr>
+                <td bgColor="#006699">
+                    <h2>
+                        <font color="white"><a name=appli>3.応用システム</a></font>
+                    </h2>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h4><a href="https://mbc.dl.itc.u-tokyo.ac.jp/UT_OPAC_Plus_gensenweb/">東京大学OPAC Plus "言選Web"</a></h4>
+    <p>関連学術用語リストの提示から東京大学OPACへのナビゲートを行います。</p>
+    <table cellSpacing=2 cellPadding=4 width="100%" border=0>
+        <tbody>
+            <tr>
+                <td bgColor="#006699">
+                    <h2>
+                        <font color="white"><a name=paper>4.関連文献</a></font>
+                    </h2>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p>当プロジェクトの報告や、当システムで使用している中川教授の専門用語（キーワード）抽出理論についての論文リストです</P>
+    <li><a href="./paper.html"><strong>”専門用語（キーワード）自動抽出システム”関連文献リスト</strong></a>
+    </li>
+        <hr color="#006699">
+        <p>　「専門用語自動抽出システム」は
+            東京大学情報基盤センター図書館電子化部門</A>中川裕志教授および
+            <a href="http://www.eis.ynu.ac.jp/">横浜国立大学環境情報研究院</A>森辰則助教授が共同で開発したものです。
+今回提供するシステムは、主として中川教授、
+            <a href="http://www.lib.e.u-tokyo.ac.jp/">東京大学経済学部図書館</A>前田朗、
+            <a href="http://www.lib.e.u-tokyo.ac.jp/shiryo/shiryo.html">東京大学経済学部資料室</A>助手小島浩之の３者で検討を重ね、この「専門用語自動抽出システム」を改良したものです。
+            <br>
+            <br>
+            <strong>Copyright (C) 2003 Hiroshi Nakagawa, Akira Maeda and Hiroyuki Kojima All Rights Reserved.</strong>
+        </p>
+    </li>
+</body>
+
+</html>
