@@ -1,0 +1,165 @@
+#!/usr/local/bin/perl
+
+###########################################################
+#
+# get_stat.pl version 0.20
+#
+# TermExtaractモジュールの学習用DBの内容確認用スクリプト
+#
+#  maeda@lib.u-toky.ac.jp
+#
+#####################################################################
+#
+# 使い方
+#
+# "Input Key Word >> "のプロンプトに続けて、統計情報を得たい語を入れる
+#
+# 単名詞単位の統計情報DB、隣接語の出現頻度DB、隣接語の出現頻度（逆順）
+# DBからデータが表示される。前方一致で検索する場合は、キーワードの末尾
+# に'*'を追加すること（例:  東京* ）。
+#
+# また、次のコマンドを受け付ける。
+#   SDBM　　         →　SDBM_File用に動作する
+#                      （単名詞単位の統計情報DBのみ、完全一致で検索）
+#   REVERSE           →　隣接語出現頻度（逆順）DBを再作成する
+#   DUMP "ファイル名" →　結果を指定したファイルに出力
+#   Q （もしくは q)    →　このプログラムを終了する
+#
+#　起動時のオプションは次のとおり。
+#　 -r   隣接語出現頻度（逆順）DBの再作成
+#   -s   SDBMでの動作（単名詞単位の統計情報DBのみ、完全一致で検索）
+#   -h   ヘルプの表示
+#
+####################################################################
+
+use TermExtract::Calc_Imp;
+use Getopt::Std;
+
+$data = new TermExtract::Calc_Imp;
+$sdbm = 0;  # 真　→　SDBMを使用、偽　→　DB_Fileを使用
+$mode = 0;  # 真　→　前方一致モード、偽　→　完全一致モード
+$file = ""; # 出力先のファイル
+$key  = ""; # 検索キーワード
+
+# 統計用DBのファイル名をセット（デフォルト以外を使用している場合）
+#$data->stat_db("stat.db");
+#$data->comb_db("comb.db");
+#$data->comb_r_db("comb_r.db");
+
+getopts(hrs);
+# ヘルプの表示
+if ($opt_h) {
+    print_help();
+    exit;
+}
+
+# 学習用DBにSDBMを使う場合
+if ($opt_s) {
+    $mode = 0;
+    $sdbm = 1;
+    $data->use_SDBM;
+}
+
+# 隣接語出現情報を、語順を逆にして作成
+if ($opt_r) {
+   print "隣接語出現頻度（逆順）DBの再作成を行います\n";
+   $data->make_comb_rev;
+   exit;
+}
+
+# 対話型による検索語受付
+while (1) {
+    print_help();
+    print "\n";
+    print "SDBMモード\n" if $sdbm;
+    print "ファイル $file に結果を出力します\n" if $file;
+    print "Input Key Word >> ";
+    $key = <STDIN>;
+    chomp $key;
+
+    # 末尾に'*'がついていた場合、前方一致で検索
+    if ($key =~ s/\*//) {
+       $mode = 1 unless $sdbm;
+    }
+
+    # 学習用DBにSDBMを使う場合
+    if ($key eq "SDBM") {
+       $mode = 0;
+       $sdbm = 1;
+       $data->use_SDBM;
+       next;
+    }
+
+    # 隣接語出現頻度（逆順）DBの再作成
+    if ($key eq "REVERSE") {
+       print "隣接語出現頻度（逆順）DBの再作成を行います\n";
+       $data->make_comb_rev;
+       next;
+    }
+
+    # ファイルへの結果出力
+    if ($key =~ /^DUMP\s+.+/) {
+       ($file) = $key =~ /^DUMP\s+(.+)/;
+       open (DUMP, ">$file") || die $!;
+       next;
+    }
+
+    if ($key =~ /^q$/i) {
+        last;
+    }
+
+    # ファイルが指定された場合はそのファイルへ出力切り替え
+    select DUMP if $file;
+
+    print "\n####              単名詞単位の統計情報               ####\n";
+    print "# pre(異なり数) pre(延べ数) post(異なり数) post（延べ数) #\n";
+    if ($mode) { $data->dump_stat_db("$key");    }
+    else       { $data->dump_stat_db("$key", 1); }
+
+    unless ($sdbm) {
+        print "\n####   隣接語とその頻度   ####\n";
+        $data->dump_comb_db("$key");
+
+        print "\n####   隣接語とその頻度（逆順）   ####\n";
+        eval { $data->dump_comb_r_db("$key"); };
+    }
+
+    # ファイルへの出力終了
+    if ($file) {
+       select STDOUT;
+       close (DUMP);
+       print "ファイルへの出力が終了しました\n";
+    }
+
+    # 画面一時停止
+    $key = <STDIN>;
+}
+
+# ヘルプの表示
+sub print_help {
+  print <<END_OF_TEXT;
+
+ TermExtaractモジュールの学習用DBの内容確認用スクリプト
+
+ 使い方
+
+ "Input Key Word >> "のプロンプトに続けて、統計情報を得たい語を入れる
+
+ 単名詞単位の統計情報DB、隣接語の出現頻度DB、隣接語の出現頻度（逆順）
+ DBからデータが出力される。前方一致で検索する場合は、キーワードの末尾
+ に'*'を追加すること（例:  東京* ）。
+
+　また、次のコマンドを受け付ける。
+
+   SDBM　　           →  SDBMでの動作（単名詞単位の統計情報DBのみ、
+                          完全一致で検索）
+   REVERSE            →　隣接語出現頻度（逆順）DBを再作成する
+   DUMP "ファイル名"　→　結果を指定したファイルに出力
+   Q （もしくは q)    →　このプログラムを終了する
+
+　起動時のオプションは次のとおり。
+　 -r   隣接語出現頻度（逆順）DBの再作成
+   -s   SDBMでの動作（単名詞単位の統計情報DBのみ、完全一致で検索）
+   -h   ヘルプ
+END_OF_TEXT
+}
