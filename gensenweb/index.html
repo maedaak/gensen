@@ -24,10 +24,13 @@
                 <button type="button" class="btn btn-primary  btn-lg" onclick="termextract_ja()">和文用語抽出</button>&nbsp;
                 <button type="button" class="btn btn-primary  btn-lg" onclick="termextract_en()">英文用語抽出</button>&nbsp;
                 <button type="button" class="btn btn-secondary btn-lg" onclick="Clear()">クリア</button>
+                <br><br>
+                <input type="checkbox" class="btn-check" id="no_score" autocomplete="off">
+                <label class="btn btn-outline-primary" for="no_score">重要度なし</label><br>
             </p>
             <br><br>
             <p>
-                <strong>用語抽出結果は重要度のスコア込みでここに出力されます</strong><br>
+                <strong>用語は重要度のスコア込みでここに出力されます</strong><br>
                 <textarea class="form-control" type="text" name="result" id="result" cols=100 rows=15></textarea>
             </p>
             <hr>
@@ -45,6 +48,7 @@
         <script src="./js/gensenwebBrillstaggerjs.js"></script>
         <script type="text/javascript">
         <!--
+             var no_score = document.getElementById('no_score');
             let japaneseTokenizerPromise;
 
             async function termextract_ja() {
@@ -81,10 +85,19 @@
                     const lrScores = termextract.score_lr(frequency, termextract.IGNORE_WORDS, 1, 1);
                     const importance = termextract.term_importance(frequency, lrScores);
                     const sortedTerms = termextract.sort_by_importance(importance);
-                    const response = sortedTerms.map(data =>
-                        `${termextract.modify_agglutinative_lang(data.cmp_noun)}\t${data.importance}`
-                    ).join("\n");
-                    $('#result').val(response);
+                    if (no_score.checked) {
+                        const response = sortedTerms.map(data =>
+                            `${termextract.modify_agglutinative_lang(data.cmp_noun)}`
+                        ).join("\n");
+                        $('#result').val(response);
+                    }
+                    else {
+                        const response = sortedTerms.map(data =>
+                            `${termextract.modify_agglutinative_lang(data.cmp_noun)}\t${data.importance}`
+                        ).join("\n");
+                        $('#result').val(response);
+                    }
+
                 } catch (error) {
                     $('#result').val(`日本語用語抽出に失敗しました: ${error.message}`);
                 }
@@ -111,10 +124,18 @@
                     const lrScores = termextract.score_lr(frequency, termextract.IGNORE_WORDS, 1, 1);
                     const importance = termextract.term_importance(frequency, lrScores);
                     const sortedTerms = termextract.sort_by_importance(importance);
-                    const response = sortedTerms.map(data =>
-                        `${termextract.modify_agglutinative_lang(data.cmp_noun)}\t${data.importance}`
-                    ).join("\n");
-                    $('#result').val(response);
+                    if (no_score.checked) {
+                        const response = sortedTerms.map(data =>
+                            `${termextract.modify_agglutinative_lang(data.cmp_noun)}`
+                        ).join("\n");
+                        $('#result').val(response);
+                    }
+                    else {
+                        const response = sortedTerms.map(data =>
+                            `${termextract.modify_agglutinative_lang(data.cmp_noun)}\t${data.importance}`
+                        ).join("\n");
+                        $('#result').val(response);
+                    }
                 } catch (error) {
                     $('#result').val(`英語用語抽出に失敗しました: ${error.message}`);
                 }
