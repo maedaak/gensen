@@ -1,18 +1,18 @@
 <htm>
 <head>
-<title>専門用語（キーワード）自動抽出Pythonモジュールtermextract【β版】</title>
+<title>専門用語（キーワード）自動抽出Pythonモジュールtermextract</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" href="css/pytermextract.css" />
 </head>
 <doby>
-<h1>専門用語（キーワード）自動抽出Pythonモジュールtermextract【β版】</h1>
+<h1>専門用語（キーワード）自動抽出Pythonモジュールtermextract</h1>
 <p />
 
 <div id="0"><h3>Contents:</h3>
 <a href="#1">１．概要</a> / <a href="#2">２．インストール</a> / <a href="#3">３．コンセプト</a> / <br />
 <a href="#4">４．利用例</a> / <a href="#5">５．利用法</a> / <br />
-<a href="#6">６．オリジナルTermExtractとの違い</a> /  <a href="#7">７．α版との違い</a> / <br />
-<a href="#8">８．Copyright</a> / <a href="#9">９．免責</a>
+<a href="#6">６．オリジナルTermExtractとの違い</a> /  <br />
+<a href="#7">７．Copyright</a> / <a href="#8">８．免責</a>
 <p />
 <div class="leftlink"><a href="http://gensen.dl.itc.u-tokyo.ac.jp/">専門用語自動抽出システムのトップページへ</a></div>
 <hr />
@@ -29,7 +29,10 @@ termextractはテキストデータから専門用語を取り出すためのPyt
 
 <div id="2">
 <h2>２．インストール</h2>
-pytermextractを解凍し以下のコマンドを実行すること。<br />
+<p>pytermextractをGitHubから取得<br>
+<a href="https://github.com/maedaak/pytermextract">pytermextract (GitHub)</a></p>
+<br>
+以下のコマンドを実行する。<br />
 　<code>python setup.py install</code>
 <p />
 <hr />
@@ -221,9 +224,9 @@ pytermextractを解凍し以下のコマンドを実行すること。<br />
              <dt>cmp_noun_dict(data)</dt>
              <dd>
                 複合語（単名詞の空白区切り）をキーに、その出現回数を値にしたディクショナリを返す。
-　　　　　   </dd>
-　　　　　   <br />
-             <dt>IGNORE_WORDS</dt>
+           </dd>
+           <br />
+            dt>IGNORE_WORDS</dt>
              <dd>
                  重要度計算外にする推奨の単名詞のセットを返す
              </dd>
@@ -309,36 +312,7 @@ Python3の標準文字コードに合わせ、入出力をUTF-8に限定
 </div>
 
 <div id="7">
-<h2> ７．α版との違い</h2>
-<h3>（１）モジュール名及び関数名の変更</h3>
-Python推奨のスタイルに合わせ名称を変更した。
-<p />
-<h3>（２）重要度計算処理手順の変更</h3>
-α版ではFLR(Frequency × LR)による重要度を関数calc_impにパラメータを与えることで算出した。<br />
-β版では各重要度計算方式による用語と重要度のディクショナリを組み合わせることにより、最終的な重要度を出力する。
-<p />
-<h3>（３）TF・IDF・LRによる重要度計算の追加</h3>
-TF・IDF・LRの重要度をFrequency（用語とその頻度のディクショナリ）からそれぞれ算出できるようにした。<br />
-IDFの算出のためDF情報をdmbに蓄積し、その蓄積データから用語のセット、もしくはディクショナリを渡すことで、指定の用語のIDFを取り出せるようにした。
-<p />
-<h3>（４）LRの情報蓄積とその取り出しを追加した</h3>
-LR情報をdmbに蓄積し、その蓄積データから用語のセット、もしくはディクショナリを渡すことで、指定の用語のLRを取り出せるようにした。
-<p />
-<h3>（５）ストップワード方式による用語抽出の追加</h3>
-英文・和文・中文それぞれのストップワード方式による用語抽出モジュールを追加した。
-<p />
-<h3>（６）IGNORE_WORDSの変数名大文字化とセット化</h3>
-α版のignore_wordsの変数名を定数であることから大文字化した。<br />
-また処理速度の向上のためリストからセットに変更した。
-<p />
-<h3>（８）バグの修正</h3>
-α版にあるバグのいくつかを修正した
-<hr />
-<p />
-</div>
-
-<div id="8">
-<h2>８．Copyright</h2>
+<h2>７．Copyright</h2>
 　「専門用語自動抽出システム」は 東京大学情報基盤センター図書館電子化部門中川裕志教授および 横浜国立大学環境情報研究院森辰則助教授が共同で開発したものです。<br />
 　pytermextractは主として中川教授、 東京大学前田朗、 東京大学小島浩之講師の３者で検討を重ね、この「専門用語自動抽出システム」を改良したものである。<br />
 <p />
@@ -409,8 +383,8 @@ LR情報をdmbに蓄積し、その蓄積データから用語のセット、も
 <p />
 </div>
 
-<div id="9">
-<h2>９．免責</h2>
+<div id="8">
+<h2>８．免責</h2>
     本プログラムの使用において生じたいかなる結果に関しても当方では
   一切責任を負わない。
 </p />

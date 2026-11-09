@@ -1,324 +1,278 @@
-<HTML>
-<HEAD>
-<TITLE>専門用語（キーワード）自動抽出用Perlモジュール "TermExtract"の解説</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=UTF-8">
-</HEAD>
-<BODY>
-<H2>
-<CENTER>専門用語（キーワード）自動抽出用Perlモジュール</CENTER>
-<CENTER><B>"TermExtract" </B>の解説</CENTER></H2>
-<P>
-はじめに <PRE>　テキストデータから、専門用語を取り出すためのPerlモジュール"TermExtract"を解
-説します。
-　日本語の文章中から単語を切り出す定番のソフトとして、<A href="http://chasen.aist-nara.ac.jp/index.html.ja">「茶筅」</A>や「案山子」があ
-りますが、そのまま専門用語の抽出に使うには次の２つの問題があります。
-　ひとつは、複合語に対応していないことです。専門用語の多くは単語を組み合わせて、
-複雑な概念を表すことが多くなります。特に「茶筅」の場合は単語を品詞単位で細かく
-分割するため、そのまま使うには難があります。
-　もうひとつは、どの用語が重要であるか判断する仕組みを持たないことです。
+<!doctype html>
+<html lang="ja">
 
-　その問題点を解決したソフトに<A href="http://www.r.dl.itc.u-tokyo.ac.jp/~nakagawa/index-naka.html">東京大学・中川裕志教授</A>、横浜国立大学・
-森辰則助教授が作成した<A href="http://www.r.dl.itc.u-tokyo.ac.jp/~nakagawa/resource/termext/atr.html">「専門用語自動抽出システム」</A>があります。
-それは、１）「茶筅」の形態素解析結果を複合語に組み立て、２）その複合語（単語の場
-合もある）を重要度の高い順に返すものです。
-　TermExtractは、この「専門用語自動抽出システム」を東京大学情報基盤センター・中川
-裕志教授の教示を受け、東京大学経済学部・前田朗が全面的に組みなおしたものです。
-　また、形態素解析によらない、英文及び中文の専門用語自動抽出機能なども追加されてい
-ます。
-</PRE>
-<P></P>
-<P>
-<HR>
-実行環境 <PRE><DL>
-<DT>Perl
-<DD>
-　TermExtract は バージョン５のPerl（JPerlを含む)で動作します。
+<head>
+  <meta charset="UTF-8">
+  <title>専門用語（キーワード）自動抽出用Perlモジュール "TermExtract"の解説</title>
+</head>
 
-<DT>Perl DB_Fileモジュール
-<DD>
-　TermExtract で学習機能を使うには、PerlのDB_File モジュールの使用を推奨
-しています。これは標準のPerlモジュールには含まれていません。マシンの環境
-によっては、別途インストールする必要があります。
-　もし、DB_Fileが使えない場合は、SDBM_File を使うよう設定できます。専門
-用語の抽出機能自体は変わりませんが、学習用DBの内容確認で、いくつか使えな
-くなる機能があります。
+<body>
+  <header>
+    <h1>専門用語（キーワード）自動抽出用Perlモジュール「TermExtract」の解説</h1>
+  </header>
+  <main>
+    <section>
+      <h2>はじめに</h2>
+      <p>テキストデータから、専門用語を取り出すためのPerlモジュール"TermExtract"を解説します。<br>
+        日本語の文章中から単語を切り出す定番のソフトとして、<A
+          href="http://chasen.aist-nara.ac.jp/index.html.ja">「茶筅」</a>や「案山子」がありますが、そのまま専門用語の抽出に使うには次の２つの問題があります。<br>
+        ひとつは、複合語に対応していないことです。専門用語の多くは単語を組み合わせて、複雑な概念を表すことが多くなります。特に「茶筅」の場合は単語を品詞単位で細かく分割するため、そのまま使うには難があります。<br>
+        もうひとつは、どの用語が重要であるか判断する仕組みを持たないことです。<br>
 
+        その問題点を解決したソフトに<A
+          href="http://www.r.dl.itc.u-tokyo.ac.jp/~nakagawa/index-naka.html">東京大学・中川裕志教授</a>、横浜国立大学・森辰則助教授が作成した<A
+          href="http://www.r.dl.itc.u-tokyo.ac.jp/~nakagawa/resource/termext/atr.html">「専門用語自動抽出システム」</a>があります。<br>
+        それは、１）「茶筅」の形態素解析結果を複合語に組み立て、２）その複合語（単語の場合もある）を重要度の高い順に返すものです。<br>
+        TermExtractは、この「専門用語自動抽出システム」を東京大学情報基盤センター・中川裕志教授の教示を受け、東京大学経済学部・前田朗が全面的に組みなおしたものです。<br>
+        また、形態素解析によらない、英文及び中文の専門用語自動抽出機能なども追加されています。<br>
+      </p>
+    </section>
+    <section>
+      <h2>実行環境</h2>
+      <dl>
+        <dt>Perl</dt>
+        <dd>
+          TermExtract は バージョン５のPerlで動作します。<br>
+        </dd>
+        <br>
+        <dt>Perl DB_Fileモジュール</dt>
+        <dd>
+          TermExtract で学習機能を使うには、PerlのDB_File
+          モジュールの使用を推奨しています。これは標準のPerlモジュールには含まれていません。マシンの環境によっては、別途インストールする必要があります。<br>
+          もし、DB_Fileが使えない場合は、SDBM_File を使うよう設定できます。専門用語の抽出機能自体は変わりませんが、学習用DBの内容確認で、いくつか使えなくなる機能があります。<br>
+        </dd>
+        <br>
+        <dt>形態素解析ソフト</dt>
+        <dd>
+          TermExtractは形態素解析ソフトの処理結果を入力とします。なお、英文に関しては、version 1.35 からストップワード方式も使えるようになっており(EnglishPlainText.pm)
+          、これを使う場合は形態素解析ソフトは不要です。<br>
+          組み合わせられる形態素解析ソフトは、現在のところ次のとおりです。<br>
+          <br>
+          　和文<br>
+          　　　<A href="http://sourceforge.jp/projects/chasen-legacy/">「茶筅」</a><strong>(ver 2.3.3 では英単語が区切りなしで処理されます。<br>
+            　　　 「和布蕪」かver.2.1以前の「茶筅」がお勧めです)</strong>
+          <A href="http://mecab.sourceforge.net/">「和布蕪」</a>
+          <br>
+          　英文<br>
+          　<A href="http://research.microsoft.com/~brill/">"Brill's Tagger"</a>
+          　<A href="http://web.media.mit.edu/~hugo/research/montytagger.html">"Monty Tagger"</a>
+          <br>
+          　中文<br>
+          　<A href="http://mtgroup.ict.ac.cn/~zhp/ICTCLAS/Codes%20and%20Application/ICTCLAS_Win.exe">"ICTCLAS"</a>
 
-<DT>形態素解析ソフト
-<DD>
-　TermExtractは形態素解析ソフトの処理結果を入力とします。なお、
-英文に関しては、version 1.35 からストップワード方式も使えるよう
-になっており(EnglishPlainText.pm) 、これを使う場合は形態素解析
-ソフトは不要です。
-　組み合わせられる形態素解析ソフトは、現在のところ次のとおりです。
+          他の形態素解析ソフトにもTermExtractの仕様に沿った派生クラスを自作することで対応が容易です。<br>
+          形態素解析ソフトの入手やインストール手順は上記のリンクからお願いします。<br>
+        </dd>
+        <br>
+        <dt>ファイル及びディレクトリの新規作成権限（「学習機能」使用時）</dt>
+        <dd>
+          TermExtract はPerlのDB_File
+          モジュールが使える環境にあれば、学習機能を実<br>現するためバークレーDB用のファイル（２種）を作成します。バークレーDBの代わりに、SDBMを使う設定もできます。<br>
+          もし、指定したDBファイルが存在しなければ新規に作成を試みます。デフォルトはプログラムの実行ディレクトリの"stat.db"と"comb.db"です。(SDBMの場合は、"stat.db.dir",
+          "stat.db.pag", "comb.db.dir","comb.db.pag")<br>
+          ただし、学習機能をまったく使わないのであれば、DBファイルを作成しないこともできます。<br>
+          また、このモジュールは上記DBの排他制御のための機能を持ちます。ただし、この機能のためマシン上にディレクトリの作成・削除ができる場所を用意する必要が<br>
+          あります。<br>
+          オプションでこの排他制御を行わないこともできます。データの保障はされませんが、マシン上に一時ディレクトリを作らずにすみます。<br>
 
-　和文
-　　　<A href="http://sourceforge.jp/projects/chasen-legacy/">「茶筅」</A><font color="red">(ver 2.3.3 では英単語が区切りなしで処理されます。
-　　　    「和布蕪」かver.2.1以前の「茶筅」がお勧めです)</font>
-      <A href="http://mecab.sourceforge.net/">「和布蕪」</A>
+        </dd>
+      </dl>
+    </section>
+    <section>
+      <h2>モジュールのインストール</h2>
+      <p>GitHubからモジュールを入手し、解凍・展開します。OSに応じて次のとおりインストールします。<br>
+      <a href="hhttps://github.com/maedaak/TermExtract">TermExtract (GitHub)</a></p>
+      <h3>Unix</h3>
+      <p>次のコマンドを順次実行することでインストールします。</p>
+      <pre><code>perl Makefile.PL
+make
+su
+make install</code></pre>
 
-　英文
-   　<A href="http://research.microsoft.com/~brill/">"Brill's Tagger"</A>
-   　<A href="http://web.media.mit.edu/~hugo/research/montytagger.html">"Monty Tagger"</A>
-   　
-　中文
-   　<A href="http://mtgroup.ict.ac.cn/~zhp/ICTCLAS/Codes%20and%20Application/ICTCLAS_Win.exe">"ICTCLAS"</A>
+      <p>
+        もし、上記の方法でうまく動作しない場合は、解凍した"TermExtract"フォルダを、Perlのライブラリのパスが通っているディレクトリにフォルダごとコピーしてください。Perlのライブラリの位置は、<code>perl -V</code>コマンドで確認できます。
+      </p>
 
-　他の形態素解析ソフトにもTermExtractの仕様に沿った派生クラスを自作するこ
-とで対応が容易です。
-　形態素解析ソフトの入手やインストール手順は上記のリンクからお願いします。
+      <h3>Windows (ActivePerl)</h3>
+      <p>
+        展開したフォルダのWindowsサブフォルダにあるアイコン"win_install.pl"をダブルクリックし、実行します。自動的にActivePerlの"site\lib"ディレクトリに必要なファイルが展開されます。<br>
+        もし、上記の方法でうまく動作しない場合は、Windowsのコマンドプロンプトから"win_install.pl"を実行します。cdコマンドで、win_install.plのあるディレクトリ（フォルダ）まで移動し、<code>perl win_install.pl</code>とコマンド入力してください。
+      </p>
 
+      <ul>
+        <li><a href="http://gensen.dl.itc.u-tokyo.ac.jp/soft/TermExtract-4_11.tar.gz">TermExtract (tar.gz形式)</a></li>
+        <li><a href="http://gensen.dl.itc.u-tokyo.ac.jp/soft/TermExtract-4_11.zip">TermExtract (ZIP形式)</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>使いかた</h2>
+      <p>入力となる形態素解析ソフトによってモジュールを選びます。また、その際の使用法のサンプルを示します。</p>
+      <ul>
+        <li>「茶筅」の場合は、TermExtract::Chasen <a href="sampleex_chasen.pl.txt">サンプルスクリプト</a></li>
+        <li>「和布蕪」の場合は、TermExtract::MeCab <a href="sampleex_mecab.pl.txt">サンプルスクリプト</a></li>
+        <li>和文 (EUC) そのものの場合は、TermExtract::JapanesePlainTextEUC <a href="sampleex_JPTE.pl.txt">サンプルスクリプト</a></li>
+        <li>和文 (SJIS) そのものの場合は、TermExtract::JapanesePlainTextSJIS <a href="sampleex_JPTS.pl.txt">サンプルスクリプト</a></li>
+        <li>英文そのものの場合は、TermExtract::EnglishPlainText <a href="sample/ex_EPT.pl.txt">サンプルスクリプト</a></li>
+        <li>"Brill's Tagger"、"Monty Tagger" の場合は、TermExtract::BrillsTagger <a href="sampleex_BT.pl.txt">サンプルスクリプト</a>
+        </li>
+        <li>中文 (GBコード) そのものの場合は、TermExtract::ChainesPlainTextGB <a href="sampleex_CPT_GB.pl.txt">サンプルスクリプト (GBコード)</a>
+        </li>
+        <li>中文 (UTF-8) そのものの場合は、TermExtract::ChainesPlainTextUC <a href="sampleex_CPT_UC.pl.txt">サンプルスクリプト</a></li>
+        <li>ICTCLASの場合は、TermExtract::ICTCLAS <a href="sampleex_ICT.pl.txt">サンプルスクリプト (GBコード)</a></li>
+      </ul>
+      <p>サンプルスクリプトを見ればわかりますが、専門用語の重要度の計算方式で、いくつものオプション指定ができます。<br>
+        オプションの設定方法は、以下に示す各モジュールのドキュメントをご覧ください。<br>
+        また、専門用語の重要度の指定をデフォルトによらず、任意に設定するには専門用語重要度計算の理解が必要です。<a href="paper">専門用語（キーワード）自動抽出システム”関連文献リスト</a>に詳しい説明がありますので、ここでは理論の概要と、補足情報を示します。<br>
+        なお、以下は日本語の文章の例で示していますが、英文でも同じです。</p>
+      <dl>
+        <DT>専門用語の生成
+        <dd>和文の場合は「茶筅」や「和布蕪」といった形態素解析ソフトを使い、文章を単語に分割します。その際に、分割した単語の品詞情報も合わせて情報として出てきます。<br>
+          複合語は、語の並びと品詞情報を元に組み立てます。<br>
+          基本的には名詞が連続で出現した場合、それらを統合し複合語とします。</dd>
+        <dd>英文については、Bill's POD Tagger やMonty Tagger
+          といった品詞タグ付けソフトを使い和文と同様の処理を行う方法と、指定したストップワードで文章を複合語に分割する方法の２つを用意しています。ストップワードは、次の文献に書かれていたものを基本としています。<br>
+          <cite> B. Frakes, Ricardo Baeza-Yates. 1992. Information retrieval : data structures &amp; algorithms. Upper.
+          Saddle River, N.J. : Prentice Hall PTR(ISBN 0-13-463837-9)</dd>
+        <br>
+        <dt>重要度計算の仕組み</dt>
+        <dd>
+          このモジュールでの専門用語は、単語そのものか複数の単語を組み合わせて作られます。この複合語を構成する最小単位の名詞を特に「単名詞」と呼びます。この単名詞が他の単名詞と連結して複合語をなすことが多いほど、重要な概念を示す<br>
+          と考えます。<br>
+          簡単な例で、「情報科学技術」を考えます。この語は次のとおり３つの単名詞に分割できます。この際、それぞれの単名詞が他の単名詞とどれだけ結びつくか統計<br>
+          的に分かっているとします。<br>
+          <br>
+          単名詞　　前の語に連結した回数　　後の語に連結した回数<br>
+          =========================================================<br>
+          「情報」　　　　　１　　　　　　　　　　　　　　　２<br>
+          「科学」　　　　　２　　　　　　　　　　　　　　　３<br>
+          「技術」　　　　　１　　　　　　　　　　　　　　　１<br>
+          <br>
+          複合語全体の重要度はこれらの６つ（単名詞数ｘ２）の数値の平均から求めます。<br>
+          「日本語マニュアル文における名詞間の連接情報を用いたハイパーテキストのための索引の抽出」（『情報処理学会論文　第３８巻　第１０号』　平成9年10月）により、相乗平均がもっともよい結果になることがわかっていますので、平均は相乗平均でとるようにしています。<br>
+          また、相乗平均をとる際に、連結した回数が０回の単名詞に対応するため、各回数に１を加算した値を用いています。<br>
+          <br>
+        <dt>ドキュメント中の用語の出現頻度</dt>
+        <dd>前述した重要度に、ドキュメント中の専門用語の出現頻度を掛けることもできます。これはオプションにより選択できます。デフォルトは、出現頻度を用います。<br>
+          この計算方式は、異なる２つの要素の掛け合わせとなりますので、重要度中に占める、それぞれの比率が問題となります。デフォルトは、連接回数の相乗平均に、ドキュメント中の用語の頻度を掛けたものです。これを、連接回数の相乗平均のx乗にすることができます（xは任意）。<br>
+          <br <dt>連接の「延べ数」、「異なり数」、「パープレキシティ」</dt>
+        <dd>単名詞の連接情報は、連接した単語の種類をカウントする方法（異なり数）と、種類にかかわらず出現しただけカウントする方法（延べ数）、そして情報理論的に見た連接回数（パープレキシティ）の３つの方法があります。<br>
+          例えば、統計データで、「情報」という語が「科学」の前に２回、「技術」の前に３回連接したことが分かっているとします。<br>
+          この場合連接語の異なり数と延べ数は次のようになります。<br>
+          <hr>
+          　　異なり数　　２回　（「科学」　＋　「技術」」で２種）<br>
+          　　延べ数　　　５回　（「科学」２回　＋　「技術」３回）<br>
+          <br>
+          　　* パープレキシティは、「情報理論的に見ていくつの単名詞が連接可能か」を示します。詳しくは、<a href="Calc_Imp.html#use_perplexity">パープレキシティの仕様の詳細</a>をご参照ください。<br>
+          　これはオプションによって選択できます。デフォルトは「延べ数」を用います。<br>
+          <br>
+        <dt>学習機能 (オプション機能)</dt>
+        <dd>単名詞の連接情報は、元となるデータが多ければ多いほど正確な統計データが得られると推定されます。この学習機能は、いままでに処理対象としたテキストから単名詞の連接情報を蓄積し、重要度計算で用いるものです。<strong>ただし、雑多な文献を扱うと、結果として一般すぎる語が上位にきます。分野を特定した上でお使<br>
+            い下さい。</strong>
+          デフォルトは現在処理対象となっているテキストのみから連接情報を得ます。<br>
+          これはオプションによって選択できます。デフォルトは学習機能がOFFになっています。次のメソッドを実行することで「学習機能」が有効になります。<br>
+          <code>
+            $obj->use_storage;<br>
+            $obj->use_stat;<br>
+          </code>
+          <br>
+        </dd>
+        <dt>その他の重要度計算モード (Frequency, TF, TF*IDF)</dt>
+        <dd>バージョン 4.02 より、連接情報以外の重要度計算手法も実行できるようになりました。<br>
+          専門用語抽出システムでは用語の文章中の出現頻度をいままでも使ってきました。この用語の出現頻度のカウント方法には、Frequency と TF(Term Frequency)
+          の２つがあります。いままでは、Frequency のみ使ってきました。今回のバージョンから、TF もオプション指定できるようになります。また、用語の連接情報をカットすることで、Frequency, TF
+          のみで重要度計算することも可能です。Frequency と TF の違いは次のとおりです。<br>
+          <UL>
+            <LI>Frequency ------------ 用語が他の用語の一部として使われていた場合にカウントしません<br>
+            <LI>TF(Term Frequency) --- 用語が他の用語の一部として使われていた場合もカウントします<br>
+          </ul>
+          <br>
+          たとえば、「情報システムと情報」という例でみてみます。この場合、"TermExtract"において、FrequencyとTFは次のようにカウントされます。<br>
+          <UL>
+            <LI>Frequency の場合 --------- 「情報」が<strong>１回</strong>、「情報システム」が１回<br>
+            <LI>TF の場合 ---------------- 「情報」が<strong>２回</strong>、「情報システム」が１回<br>
+          </ul>
+          <br>
+          また、IDF(Inverted Document Frequency) の値も掛け合わせることができます。これには重要度計算の前に、処理対象とする文献群をプログラムに読ませ、DF(Document Frequency)
+          のデータベース作成しておく必要があります。<br>
+          TFとIDFの組み合わせにより、オーソドックスなTF-IDF法の重要度計算も行えます。その他、（１）連接のカウント法、（２）用語頻度、（３）IDF
+          のそれぞれのパラメータを自在に組み合わせることができます。詳しくは以下をご覧下さい。<br>
+          <br>
+          （１）連接のカウント法<br>
+          　*１）連接の「延べ数」&nbsp;(<code>$obj->use_total;</code>)<br>
+          　２）連接の「異なり数」&nbsp;(<code>$obj->use_uniq;</code>)<br>
+          　３）連接の「パープレキシティ」&nbsp;(<code>$obj->use_Perplexity;</code>)<br>
+          　４）連接情報を使わない →&nbsp;用語頻度か用語頻度＊IDFのみ&nbsp;(<code>$obj->no_LR;</code>)<br>
+          <br>
+          （２）用語頻度<br>
+          　 *１）Frequency&nbsp;(<code>$obj->use_frq;</code>)<br>
+          　２）TF(Term Frequency)&nbsp;(<code>$obj->use_TF;</code>)<br>
+          　３）頻度情報を使わない&nbsp;(<code>$obj->no_frq;</code>)<br>
+          <br>
+          （３）IDFの有無（重要度計算前に処理対象文献群のDF(Document Frequency)情報をとる必要あり）<br>
+          　１）IDFを使う&nbsp;(<code>$obj->use_idf;</code>)<br>
+           *２）IDFを使わない&nbsp;<code>$obj->no_idf;</code>)<br>
 
-<DT>ファイル及びディレクトリの新規作成権限（「学習機能」使用時）
-<DD>
-　TermExtract はPerlのDB_File モジュールが使える環境にあれば、学習機能を実
-現するためバークレーDB用のファイル（２種）を作成します。バークレーDBの代わ
-りに、SDBMを使う設定もできます。
-　もし、指定したDBファイルが存在しなければ新規に作成を試みます。デフォルト
-はプログラムの実行ディレクトリの"stat.db"と"comb.db"です。(SDBMの場合は、
-"stat.db.dir", "stat.db.pag", "comb.db.dir","comb.db.pag")
-　ただし、学習機能をまったく使わないのであれば、DBファイルを作成しないこと
-もできます。
-　また、このモジュールは上記DBの排他制御のための機能を持ちます。ただし、こ
-の機能のためマシン上にディレクトリの作成・削除ができる場所を用意する必要が
-あります。
-　オプションでこの排他制御を行わないこともできます。データの保障はされませ
-んが、マシン上に一時ディレクトリを作らずにすみます。
+          　　# 上記でアスタリスク(*) を付与した項番はデフォルト値です。<br>
+          <br>
+          TF*IDF はオーソドックスな手法ですが使用法が難しいのでお気をつけください。<br>
+          まず、TF*IDFの計算式をしめします。<br>
+          <br>
+          　　　TF*IDF =<br>
+          　　　　用語の出現頻度 * log (総文献数&nbsp;/&nbsp;該当の用語を含む文献数)+1<br>
+          <br>
+          　処理は次のステップで行う必要があります。なお、termmi 中に含まれるmi_chasen.pl などのスクリプトも参考になると思います。<br>
+          <br>
+          （１）処理対象文献ごとに次の処理を実行。DF用のデータベースを作成。<br>
+          <code>
+          $obj->use_storage_df;<br>
+          $obj->get_imp_word("File Name");<br>
+        </code>
+          <br>
+          （２）IDFを有効にして、用語抽出と重要度計算を行う。また用語出現頻度をTF(Term Frequency)でとる。<br>
+          <code>
+            $obj->use_TF;<br>
+            $obj->with_idf;<br>
+            $obj->get_imp_word("File Name");<br>
+          </code>
+          （３）不要になったDF用のデータベースの内容をクリア<br>
+          <code>
+            $obj->clear_df_db();
+          </code>
 
+        </dd>
+        <br>
+        <dt>結果の掛け合わせ</dt>
+        <DD>異なる重要度計算方式で求めた結果を掛け合わせる（フィルタリングする）ことができます。例えば、学習機能を使った場合と、そうではない場合の結果を掛け合わせることもできます。</dd>
+        <br>
+        <dt>単名詞の連接情報の統計</dt>
+        <DD>ある単名詞が、どの単名詞と結びついて複合語をなすことが多いかという情報が、学習機能用データベースには蓄積されます。<br>
+          それらの情報をデータベースから抽出することもできます。これにより語学研究といった目的での使用もできます。<br>
+          その際のサンプルスクリプトを次に示します。<br>
+          <ul>
+            <li> 連接情報統計抽出 <a href="doc/get_stat.pl.txt">サンプルスクリプト</a></li>
+          </ul>
+        </dd>
+      </dl>
+    </section>
+    <section>
+      <h2>TermExtractの各モジュールの説明（PODをHTML化したもの）</h2>
+      <ul>
+        <li><a href="Calc_Imp.html">Calc_Imp.pm の説明（重要度計算のベースモジュール）</a>
+        <li><a href="Chasen.html">Chasen.pm の説明（「茶筅」用モジュール）</a>
+        <li><a href="MeCab.html">MeCab.pmの説明（「和布蕪」用モジュール）</a>
+        <li><a href="JapanesePlainTextEUC.html">JapanesePlainTextEUC.pm の説明（和文[EUC]用プレーンテキスト用モジュール）</a>
+        <li><a href="JapanesePlainTextSJIS.html">JapanesePlainTextSJIS.pm の説明（和文[SJIS]用プレーンテキスト用モジュール）</a>
+        <li><a href="EnglishPlainText.html">EnglishPlainText.pm の説明（英文プレーンテキスト用モジュール）</a>
+        <li><a href="BrillsTagger.html">BrillsTagger.pm の説明（"Birll's POS Tagger", "Monty Tagger"用モジュール）</a>
+        <li><a href="ChainesPlainTextGB.html">ChainesPlainTextGB.pm の説明（中文プレーンテキスト、GBコード用モジュール）</a>
+        <li><a href="ChainesPlainTextUC.html">ChainesPlainTextUC.pm の説明（中文プレーンテキスト、UTF-8用モジュール）</a></li>
+        <li><a href="ICTCLAS.html">ICTCLAS.pm の説明（ICTCLAS用モジュール）</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer>
+    <p><a href="http://gensen.dl.itc.u-tokyo.ac.jp/">トップページに戻る</a></p>
+  </footer>
+</body>
 
-</DD></DL></PRE>
-<P></P>
-<P>
-<HR>
-モジュールのインストール <PRE>　次からモジュールを入手し、解凍・展開します。OSに応じて次のとおりインス
-トールします。
-
-　（１）Unix
-　　　次のコマンドを順次実行することでインストールします。
-      <BLOCKQUOTE><B>
-  　　perl Makefile.PL
-      make
-      su
-  　　make install</B></BLOCKQUOTE>
-
-　　　もし、上記の方法でうまく動作しない場合は、解凍した"
-　　TermExtract"フォルダを、Perlのライブラリのパスが通っている
-　　ディレクトリにフォルダごとコピーしてください。Perlのライブ
-　　ラリの位置は、 <B>perl -V</B>コマンドで確認できます。
-
-　（２）Windows (ActivePerl)
-　　  展開したフォルダのWindowsサブフォルダにあるアイコン
-　　"win_install.pl" をダブルクリックし、実行します。自動的に
-　　ActivePerlの"site\lib"ディレクトリに必要なファイルが展開
-　　されます。
-　　　もし、上記の方法でうまく動作しない場合は、Windowsのコマ
-　　ンドプロンプトから"win_install.pl"を実行します。cd コマン
-　　ドで、win_install.plのあるディレクトリ（フォルダ）まで移動
-　　し、<B>perl win_install.pl</B>とコマンド入力して下さい。
-</PRE>
-<UL>
-  <LI><A href="http://gensen.dl.itc.u-tokyo.ac.jp/soft/TermExtract-4_11.tar.gz">TermExtract(tar.gz形式)</A> 
-
-  <LI><A href="http://gensen.dl.itc.u-tokyo.ac.jp/soft/TermExtract-4_11.zip">TermExtract(ZIP形式)</A> 
-  </LI></UL>
-<P></P>
-<P>
-<HR>
-使いかた <PRE>　入力となる形態素解析ソフトによって、モジュールを選びます、
-　また、その際の使用法のサンプルを示します。
-<UL>
-<LI>「茶筅」　の場合は、TermExtract::Chasen <A href="sampleex_chasen.pl.txt">サンプルスクリプト</A>
-<LI>「和布蕪」の場合は、TermExtract::MeCab  <A href="sampleex_mecab.pl.txt">サンプルスクリプト</A>
-<LI>和文(EUC)そのもの場合は、TermExtract::JapanesePlainTextEUC <A href="sampleex_JPTE.pl.txt">サンプルスクリプト</A>
-<LI>和文(SJIS)そのもの場合は、TermExtract::JapanesePlainTextSJIS <A href="sampleex_JPTS.pl.txt">サンプルスクリプト</A>
-<LI>英文そのもの場合は、TermExtract::EnglishPlainText
-  <A href="sample/ex_EPT.pl.txt">サンプルスクリプト</A>
-<LI>"Brill's Tagger"、"Monty Tagger" の場合は、TermExtract::BrillsTagger
-　<A href="sampleex_BT.pl.txt">サンプルスクリプト</A>
-<LI>中文（GBコード）そのもの場合は、TermExtract::ChainesPlainTextGB
-  <A href="sampleex_CPT_GB.pl.txt">サンプルスクリプト(GBコード)</A>
-<LI>中文（UTF-8）そのもの場合は、TermExtract::ChainesPlainTextUC
-  <A href="sampleex_CPT_UC.pl.txt">サンプルスクリプト</A>
-<LI>ICTCLASの場合は、TermExtract::ICTCLAS
-  <A href="sampleex_ICT.pl.txt">サンプルスクリプト(GBコード)</A>
-</LI></UL>
-　サンプルスクリプトを見ればわかりますが、専門用語の重要度の計算方式で、いく
-つものオプション指定ができます。
-　オプションの設定方法は、以下に示す各モジュールのドキュメントをご覧ください。
-　また、専門用語の重要度の指定をデフォルトによらず、任意に設定するには専門
-用語重要度計算の理解が必要です。<A href="http://www.r.dl.itc.u-tokyo.ac.jp/~nakagawa/resource/termext/atr.html">東京大学情報基盤センター中川研究室のホーム
-ページ</A>に詳しい説明がありますので、ここでは理論の概要と、補足情報を示します。
-なお、以下は日本語の文章の例で示していますが、英文でも同じです。
-<DL>
-<DT>専門用語の生成
-<DD>和文の場合は「茶筅」や「和布蕪」といった形態素解析ソフトを使い、文章を
-単語に分割します。その際に、分割した単語の品詞情報も合わせて情報として出て
-きます。
-　複合語は、語の並びと品詞情報を元に組み立てます。
-　基本的には名詞が連続で出現した場合、それらを統合し複合語とします。
-<DD>英文については、Bill's POD Tagger やMonty Tagger といった品詞タグ付け
-ソフトを使い和文と同様の処理を行う方法と、指定したストップワードで文章を複
-合語に分割する方法の２つを用意しています。ストップワードは、次の文献に書か
-れていたものを基本としています。
- William B. Frakes, Ricardo Baeza-Yates. 1992. Information retrieval : 
-data structures &amp; algorithms. Upper. Saddle River, N.J. :  Prentice
- Hall PTR
-(ISBN 0-13-463837-9)
-
-<DT>重要度計算の仕組み
-<DD>このモジュールでの専門用語は、単語そのものか複数の単語を組み合わせて作
-られます。この複合語を構成する最小単位の名詞を特に「単名詞」と呼びます。こ
-の単名詞が他の単名詞と連結して複合語をなすことが多いほど、重要な概念を示す
-と考えます。
-　簡単な例で、「情報科学技術」を考えます。この語は次のとおり３つの単名詞に
-分割できます。この際、それぞれの単名詞が他の単名詞とどれだけ結びつくか統計
-的に分かっているとします。
-
-　　単名詞　　前の語に連結した回数　　後の語に連結した回数
-　=========================================================
-　「情報」　　　　　１　　　　　　　　　　　　　　　２
-　「科学」　　　　　２　　　　　　　　　　　　　　　３
-　「技術」　　　　　１　　　　　　　　　　　　　　　１
-
-　複合語全体の重要度はこれらの６つ（単名詞数ｘ２）の数値の平均から求めます。
-　「日本語マニュアル文における名詞間の連接情報を用いたハイパーテキストのた
-めの索引の抽出」（『情報処理学会論文　第３８巻　第１０号』　平成9年10月）に
-より、相乗平均がもっともよい結果になることがわかっていますので、平均は相乗
-平均でとるようにしています。
-　また、相乗平均をとる際に、連結した回数が０回の単名詞に対応するため、各回
-数に１を加算した値を用いています。
-
-<DT>ドキュメント中の用語の出現頻度
-<DD>前述した重要度に、ドキュメント中の専門用語の出現頻度を掛けることもでき
-ます。これはオプションにより選択できます。デフォルトは、出現頻度を用います。
-　この計算方式は、異なる２つの要素の掛け合わせとなりますので、重要度中に占
-める、それぞれの比率が問題となります。デフォルトは、連接回数の相乗平均に、
-ドキュメント中の用語の頻度を掛けたものです。これを、連接回数の相乗平均のx乗
-にすることができます（xは任意）。
-
-
-<DT>連接の「延べ数」、「異なり数」、「パープレキシティ」
-<DD>単名詞の連接情報は、連接した単語の種類をカウントする方法（異なり数）と、
-種類にかかわらず出現しただけカウントする方法（延べ数）、そして情報理論的に
-見た連接回数（パープレキシティ）の３つの方法があります。
-　例えば、統計データで、「情報」という語が「科学」の前に２回、「技術」の前
-に３回連接したことが分かっているとします。
-　この場合連接語の異なり数と延べ数は次のようになります。
-
-　　異なり数　　２回　（「科学」　＋　「技術」」で２種）
-　　延べ数　　　５回　（「科学」２回　＋　「技術」３回）
-
-　　* パープレキシティは、「情報理論的に見ていくつの単名詞が連接可能か」を
-　　　示します。詳しくは、<A href="sampleCalc_Imp.html#use_perplexity">パープレキシティの仕様の詳細</A>をご参照ください。
-
-　これはオプションによって選択できます。デフォルトは「延べ数」を用います。
-
-<DT>学習機能(オプション機能)
-<DD>単名詞の連接情報は、元となるデータが多ければ多いほど正確な統計データが
-得られると推定されます。この学習機能は、いままでに処理対象としたテキストか
-ら単名詞の連接情報を蓄積し、重要度計算で用いるものです。<FONT COLOR="red">ただし、雑多な
-文献を扱うと、結果として一般すぎる語が上位にきます。分野を特定した上でお使
-い下さい。</FONT>
-　デフォルトは現在処理対象となっているテキストのみから連接情報を得ます。
-　これはオプションによって選択できます。デフォルトは学習機能がOFFになってい
-ます。次のメソッドを実行することで「学習機能」が有効になります。
-　$obj->use_storage;
-　$obj->use_stat;
-</DT>
-<DT>その他の重要度計算モード（Frequency, TF, TF*IDF)
-<DD>バージョン 4.02 より、連接情報以外の重要度計算手法も実行できるようになりま
-した。
-　専門用語抽出システムでは用語の文章中の出現頻度をいままでも使ってきました。こ
-の用語の出現頻度のカウント方法には、Frequency と TF(Term Frequency) の２つがあ
-ります。いままでは、Frequency のみ使ってきました。今回のバージョンから、TF も
-オプション指定できるようになります。また、用語の連接情報をカットすることで、
-Frequency, TF のみで重要度計算することも可能です。Frequency と TF の違いは次の
-とおりです。
-<UL>
-   <LI>Frequency ------------ 用語が他の用語の一部として使われていた場合にカウントしません
-   <LI>TF(Term Frequency) --- 用語が他の用語の一部として使われていた場合もカウントします
-</UL>
-　たとえば、「情報システムと情報」という例でみてみます。この場合、"TermExtract"
-において、FrequencyとTFは次のようにカウントされます。
-<UL>
-　 <LI>Frequency の場合 ---------  「情報」が<font color="red">１回</font>、「情報システム」が１回
-　 <LI>TF の場合 ----------------  「情報」が<font color="red">２回</font>、「情報システム」が１回
-</UL>
-
-　また、IDF(Inverted Document Frequency) の値も掛け合わせることができます。これには
-重要度計算の前に、処理対象とする文献群をプログラムに読ませ、DF(Document Frequency) の
-データベース作成しておく必要があります。
-　TFとIDFの組み合わせにより、オーソドックスなTF-IDF法の重要度計算も行えます。その他、
-（１）連接のカウント法、（２）用語頻度、（３）IDF のそれぞれのパラメータを自在に組み
-合わせることができます。詳しくは以下をご覧下さい。
-
-　（１）連接のカウント法
-　　*１）連接の「延べ数」　(<I>$obj->use_total;</I>)
-　　　２）連接の「異なり数」　(<I>$obj->use_uniq;</I>)
-　　　３）連接の「パープレキシティ」 (<I>$obj->use_Perplexity;</I>)
-　　　４）連接情報を使わない →　用語頻度か用語頻度＊IDFのみ　(<I>$obj->no_LR;</I>)
-<BR>
-　（２）用語頻度<BR>
-　　 *１）Frequency　(<I>$obj->use_frq;</I>)
-　　　２）TF(Term Frequency)　(<I>$obj->use_TF;</I>)
-　　　３）頻度情報を使わない　(<I>$obj->no_frq;</I>)
-
-　（３）IDFの有無（重要度計算前に処理対象文献群のDF(Document Frequency)情報をとる必要あり)
-　　　１）IDFを使う　(<I>$obj->use_idf;</I>)
-　　 *２）IDFを使わない　(<I>$obj->no_idf;</I>)
-
-　　# 上記でアスタリスク(*) を付与した項番はデフォルト値です。
-
-　TF*IDF はオーソドックスな手法ですが使用法が難しいのでお気をつけください。
-　まず、TF*IDFの計算式をしめします。
-
-　　　TF*IDF =
-　　　　用語の出現頻度 * log (総文献数　/ 該当の用語を含む文献数)+1
-
-　処理は次のステップで行う必要があります。なお、termmi 中に含まれる
-mi_chasen.pl などのスクリプトも参考になると思います。
-
-　（１）処理対象文献ごとに次の処理を実行。DF用のデータベースを作成。
-　　　<I>$obj->use_storage_df;
-　　　$obj->get_imp_word("File Name");</I>
-　（２）IDFを有効にして、用語抽出と重要度計算を行う。また用語出現頻度をTF(Term Frequency)でとる。
-　　　<I>$obj->use_TF;</I>
-　　　<I>$obj->with_idf;</I>
-　　　<I>$obj->get_imp_word("File Name");</I>
-　（３）不要になったDF用のデータベースの内容をクリア
-　　　<I>$obj->clear_df_db();</I>
-</DT>
-
-<DT>結果の掛け合わせ
-<DD>異なる重要度計算方式で求めた結果を掛け合わせる（フィルタリングする）こ
-とができます。例えば、学習機能を使った場合と、そうではない場合の結果を掛け
-合わせることもできます。
-</DT>
-<DT>単名詞の連接情報の統計
-<DD>ある単名詞が、どの単名詞と結びついて複合語をなすことが多いかという情報
-が、学習機能用データベースには蓄積されます。
-　それらの情報をデータベースから抽出することもできます。これにより語学研究
-といった目的での使用もできます。
- その際のサンプルスクリプトを次に示します。
-<UL>
-<LI> 連接情報統計抽出  <A HREF="doc/get_stat.pl.txt">サンプルスクリプト</A>
-</UL>
-</DT>
-</DL>
-</PRE>
-<HR>
-TermExtractの各モジュールの説明（PODをHTML化したもの） 
-<UL>
-  <LI><A href="Calc_Imp.html">Calc_Imp.pm の説明（重要度計算のベースモジュール）</A> 
-  <LI><A href="Chasen.html">Chasen.pm の説明（「茶筅」用モジュール）</A> 
-  <LI><A href="MeCab.html">MeCab.pmの説明（「和布蕪」用モジュール）</A> 
-  <LI><A  href="JapanesePlainTextEUC.html">JapanesePlainTextEUC.pm  の説明（和文[EUC]用プレーンテキスト用モジュール）</A> 
-  <LI><A  href="JapanesePlainTextSJIS.html">JapanesePlainTextSJIS.pm の説明（和文[SJIS]用プレーンテキスト用モジュール）</A> 
-  <LI><A   href="EnglishPlainText.html">EnglishPlainText.pm の説明（英文プレーンテキスト用モジュール）</A> 
-  <LI><A   href="BrillsTagger.html">BrillsTagger.pm  の説明（"Birll's POS Tagger", "Monty Tagger"用モジュール）</A> 
-  <LI><A   href="ChainesPlainTextGB.html">ChainesPlainTextGB.pm  の説明（中文プレーンテキスト、GBコード用モジュール）</A> 
-  <LI><A  href="ChainesPlainTextUC.html">ChainesPlainTextUC.pm  の説明（中文プレーンテキスト、UTF-8用モジュール）</A>  <LI><A href="ICTCLAS.html">ICTCLAS.pm  の説明（ICTCLAS用モジュール）</A> </LI></UL>
-<HR>
-<H3><A href="http://gensen.dl.itc.u-tokyo.ac.jp/">トップページに戻る</A></H3>
-<HR>
-</BODY></HTML>
+</html>
