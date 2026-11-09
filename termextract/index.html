@@ -14,14 +14,11 @@
     <section>
       <h2>はじめに</h2>
       <p>テキストデータから、専門用語を取り出すためのPerlモジュール"TermExtract"を解説します。<br>
-        日本語の文章中から単語を切り出す定番のソフトとして、<A
-          href="http://chasen.aist-nara.ac.jp/index.html.ja">「茶筅」</a>や「案山子」がありますが、そのまま専門用語の抽出に使うには次の２つの問題があります。<br>
+        日本語の文章中から単語を切り出す定番のソフトとして、「茶筅」や「案山子」がありますが、そのまま専門用語の抽出に使うには次の２つの問題があります。<br>
         ひとつは、複合語に対応していないことです。専門用語の多くは単語を組み合わせて、複雑な概念を表すことが多くなります。特に「茶筅」の場合は単語を品詞単位で細かく分割するため、そのまま使うには難があります。<br>
         もうひとつは、どの用語が重要であるか判断する仕組みを持たないことです。<br>
 
-        その問題点を解決したソフトに<A
-          href="http://www.r.dl.itc.u-tokyo.ac.jp/~nakagawa/index-naka.html">東京大学・中川裕志教授</a>、横浜国立大学・森辰則助教授が作成した<A
-          href="http://www.r.dl.itc.u-tokyo.ac.jp/~nakagawa/resource/termext/atr.html">「専門用語自動抽出システム」</a>があります。<br>
+        その問題点を解決したソフトに東京大学・中川裕志教授</a>、横浜国立大学・森辰則助教授が作成した「専門用語自動抽出システム」があります。<br>
         それは、１）「茶筅」の形態素解析結果を複合語に組み立て、２）その複合語（単語の場合もある）を重要度の高い順に返すものです。<br>
         TermExtractは、この「専門用語自動抽出システム」を東京大学情報基盤センター・中川裕志教授の教示を受け、東京大学経済学部・前田朗が全面的に組みなおしたものです。<br>
         また、形態素解析によらない、英文及び中文の専門用語自動抽出機能なども追加されています。<br>
@@ -49,15 +46,15 @@
           組み合わせられる形態素解析ソフトは、現在のところ次のとおりです。<br>
           <br>
           和文<br>
-          <A href="http://sourceforge.jp/projects/chasen-legacy/">「茶筅」</a><strong>(ver 2.3.3 では英単語が区切りなしで処理されます。 「和布蕪」かver.2.1以前の「茶筅」がお勧めです)</strong>
-          <A href="http://mecab.sourceforge.net/">「和布蕪」</a>
+          「茶筅」</a><strong>(ver 2.3.3 では英単語が区切りなしで処理されます。 「和布蕪」かver.2.1以前の「茶筅」がお勧めです)</strong>
+          <a href="https://taku910.github.io/mecab/">「和布蕪」</a>
           <br><br>
           英文<br>
-          <A href="http://research.microsoft.com/~brill/">"Brill's Tagger"</a>
-          <A href="http://web.media.mit.edu/~hugo/research/montytagger.html">"Monty Tagger"</a>
+          "Brill's Tagger<br>
+          "Monty Tagger"<br>
           <br><br>
           中文<br>
-          <A href="http://mtgroup.ict.ac.cn/~zhp/ICTCLAS/Codes%20and%20Application/ICTCLAS_Win.exe">"ICTCLAS"</a>
+          "ICTCLAS"
 
           他の形態素解析ソフトにもTermExtractの仕様に沿った派生クラスを自作することで対応が容易です。<br>
           形態素解析ソフトの入手やインストール手順は上記のリンクからお願いします。<br>
@@ -97,11 +94,6 @@ make install</code></pre>
         展開したフォルダのWindowsサブフォルダにあるアイコン"win_install.pl"をダブルクリックし、実行します。自動的にActivePerlの"site\lib"ディレクトリに必要なファイルが展開されます。<br>
         もし、上記の方法でうまく動作しない場合は、Windowsのコマンドプロンプトから"win_install.pl"を実行します。cdコマンドで、win_install.plのあるディレクトリ（フォルダ）まで移動し、<code>perl win_install.pl</code>とコマンド入力してください。
       </p>
-
-      <ul>
-        <li><a href="http://gensen.dl.itc.u-tokyo.ac.jp/soft/TermExtract-4_11.tar.gz">TermExtract (tar.gz形式)</a></li>
-        <li><a href="http://gensen.dl.itc.u-tokyo.ac.jp/soft/TermExtract-4_11.zip">TermExtract (ZIP形式)</a></li>
-      </ul>
     </section>
     <section>
       <h2>使いかた</h2>
@@ -153,7 +145,8 @@ make install</code></pre>
         <dt>ドキュメント中の用語の出現頻度</dt>
         <dd>前述した重要度に、ドキュメント中の専門用語の出現頻度を掛けることもできます。これはオプションにより選択できます。デフォルトは、出現頻度を用います。<br>
           この計算方式は、異なる２つの要素の掛け合わせとなりますので、重要度中に占める、それぞれの比率が問題となります。デフォルトは、連接回数の相乗平均に、ドキュメント中の用語の頻度を掛けたものです。これを、連接回数の相乗平均のx乗にすることができます（xは任意）。<br>
-          <br <dt>連接の「延べ数」、「異なり数」、「パープレキシティ」</dt>
+          <br>
+        <dt>連接の「延べ数」、「異なり数」、「パープレキシティ」</dt>
         <dd>単名詞の連接情報は、連接した単語の種類をカウントする方法（異なり数）と、種類にかかわらず出現しただけカウントする方法（延べ数）、そして情報理論的に見た連接回数（パープレキシティ）の３つの方法があります。<br>
           例えば、統計データで、「情報」という語が「科学」の前に２回、「技術」の前に３回連接したことが分かっているとします。<br>
           この場合連接語の異なり数と延べ数は次のようになります。<br>
